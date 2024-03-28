@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:15.2-alpine
+    container_name: db_pg
+    restart: unless-stopped
+    env_file:
+      - path: ./.env
+        required: true # default
+    volumes:
+      - ./data:/var/lib/postgresql/data:rw,z
+    ports:
+      - '5432:5432'
+
+  back:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      # image: ajmc5890/bitnami-laravel:11.0.4
+    container_name: back_laravel
+    restart: unless-stopped
+    depends_on:
+      - 'db'
+    env_file:
+      - path: ./.env
+        required: true
+    volumes:
+      - './backend:/app'
+    ports:
+      - '8000:8000'
+
+
+  # frond:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+
+
+  # adminer:
+  #   image: adminer:4.8.1
+  #   ports:
+  #     - 8080:8080     
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_
+    env_file: .env
+    depends_on:
+      - 'db'
+    ports:
+      - '8081:80'
+    # volumes:
+    #   - dpage:pgadmin4
