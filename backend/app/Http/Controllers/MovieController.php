@@ -18,13 +18,32 @@ class MovieController extends Controller
             'description'=> 'required|string',
         ]);
         $movies = Movie::create($validatedData);
-        return response()->json(['success'=>true,'message'=>'Create Successfull','data'=>$movies],200);
+        return response()->json(['success'=>true,'message'=>'Create Successfully','data'=>$movies],200);
     }
 
-    public function Update(Request $request, $id){
-        $validatedData = $request->validate([
+    public function update(Request $request, $id){
+        $request->validate([
             'title'=> 'required|string',
             'description'=> 'required|string',
         ]);
+        $movie = Movie::find($id);
+        if($movie){
+            $movie -> title = $request -> input('title');
+            $movie -> description = $request -> input('description');
+            $movie -> update();
+        }
+        return response()->json(['success'=>true,'message'=>'Update Successfully','data'=>$movie],200);
+    }
+
+    public function destroy(Request $request, $id){
+        $request->validate([
+            'title'=> 'required|string',
+            'description'=> 'required|string',
+        ]);
+        $movie = Movie::find($id);
+        if($movie){
+            $movie -> delete();
+        }
+        return response()->json(['success'=>true,'message'=>'Deleted Successfully','data'=>$movie],200);
     }
 }

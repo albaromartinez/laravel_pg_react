@@ -12,3 +12,5 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/movies', [MovieController::class, 'index']);
 Route::post('/create-movie', [MovieController::class, 'store']);
+Route::put('/update-movie/{id}', [MovieController::class, 'update']);
+Route::delete('/delete-movie/{id}', [MovieController::class, 'destroy']);

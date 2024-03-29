@@ -32,16 +32,23 @@ services:
       - '8000:8000'
 
 
-  # frond:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-
-
-  # adminer:
-  #   image: adminer:4.8.1
-  #   ports:
-  #     - 8080:8080     
+  frond:
+    build:
+      context: ./frondend
+      dockerfile: Dockerfile
+    container_name: frond
+    restart: on-failure
+    depends_on:
+      - 'db'
+      - 'back'
+    env_file:
+      - path: ./.env
+        required: true
+    volumes:
+      - './frondend:/app'
+      # - './frondend/node_modules'
+    ports:
+      - '3000:3000'
 
   pgadmin:
     image: dpage/pgadmin4:latest
