@@ -1,10 +1,9 @@
 version: '3'
 
 services:
-
   db:
     image: postgres:15.2-alpine
-    container_name: db_pg
+    container_name: db
     restart: unless-stopped
     env_file:
       - path: ./.env
@@ -14,12 +13,12 @@ services:
     ports:
       - '5432:5432'
 
-  back:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
       # image: ajmc5890/bitnami-laravel:11.0.4
-    container_name: back_laravel
+    container_name: backend_laravel
     restart: unless-stopped
     depends_on:
       - 'db'
@@ -31,21 +30,20 @@ services:
     ports:
       - '8000:8000'
 
-
-  frond:
+  frontend:
     build:
-      context: ./frondend
+      context: ./frontend
       dockerfile: Dockerfile
-    container_name: frond
+    container_name: frontend_react
     restart: on-failure
     depends_on:
       - 'db'
-      - 'back'
+      - 'backend'
     env_file:
       - path: ./.env
         required: true
     volumes:
-      - './frondend:/app'
+      - './frontend:/app'
       # - './frondend/node_modules'
     ports:
       - '3000:3000'
@@ -55,8 +53,11 @@ services:
     container_name: pgadmin_
     env_file: .env
     depends_on:
-      - 'db'
+      - 'db   '
     ports:
       - '8081:80'
     # volumes:
     #   - dpage:pgadmin4
+# networks:
+#   sexaup:
+#     name:
